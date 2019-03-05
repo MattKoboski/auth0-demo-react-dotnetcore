@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Server.Controllers
@@ -9,6 +10,7 @@ namespace Server.Controllers
     {
         // GET api/values
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<string>> Get()
         {
             return new string[] { "value1", "value2" };
@@ -16,6 +18,7 @@ namespace Server.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
+        [Authorize("Admin")]
         public ActionResult<string> Get(int id)
         {
             return "value";
