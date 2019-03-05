@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { Button, Navbar, Nav } from 'react-bootstrap';
 import './App.css';
 
 class App extends Component {
@@ -24,28 +24,19 @@ class App extends Component {
   }
 
   render() {
-    const { isAuthenticated } = this.props.auth;
+    const { isAuthenticated, getUserName } = this.props.auth;
 
     return (
-      <div>
-        <Navbar fluid>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="#">Auth0 - React</a>
-            </Navbar.Brand>
-            <Button
-              bsStyle="primary"
-              className="btn-margin"
-              onClick={this.goTo.bind(this, 'home')}
-            >
-              Home
-            </Button>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav>
             {
               !isAuthenticated() && (
                   <Button
                     id="qsLoginBtn"
-                    bsStyle="primary"
-                    className="btn-margin"
+                    variant="info"
                     onClick={this.login.bind(this)}
                   >
                     Log In
@@ -56,17 +47,16 @@ class App extends Component {
               isAuthenticated() && (
                   <Button
                     id="qsLogoutBtn"
-                    bsStyle="primary"
-                    className="btn-margin"
+                    variant="warning"
                     onClick={this.logout.bind(this)}
                   >
-                    Log Out
+                    Log Out {getUserName()}
                   </Button>
                 )
             }
-          </Navbar.Header>
-        </Navbar>
-      </div>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     );
   }
 }

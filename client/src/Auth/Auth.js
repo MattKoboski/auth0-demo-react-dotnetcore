@@ -2,6 +2,8 @@ import history from '../history';
 import auth0 from 'auth0-js';
 import { AUTH_CONFIG } from './auth0-variables';
 
+const jwt_decode = require('jwt-decode');
+
 export default class Auth {
   accessToken;
   idToken;
@@ -11,8 +13,9 @@ export default class Auth {
     domain: AUTH_CONFIG.domain,
     clientID: AUTH_CONFIG.clientId,
     redirectUri: AUTH_CONFIG.callbackUrl,
+    audience: AUTH_CONFIG.audience,
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid email'
   });
 
   constructor() {
@@ -20,7 +23,9 @@ export default class Auth {
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.isAdmin = this.isAdmin.bind(this);
     this.getAccessToken = this.getAccessToken.bind(this);
+    this.getUserName = this.getUserName.bind(this);
     this.getIdToken = this.getIdToken.bind(this);
     this.renewSession = this.renewSession.bind(this);
   }
@@ -94,4 +99,19 @@ export default class Auth {
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }
+
+  isAdmin() {
+    if (!this.isAuthenticated())
+      return false;
+
+    var decodedToken = jwt_decode(this.accessToken);
+    let roles = decodedToken['https://com.dotnetgroup/roles'];
+    return roles.indexOf('admin') > -1;
+  }
+
+  getUserName() {
+    var decodedToken = jwt_decode(this.idToken);
+    return decodedToken.email;
+  }
+
 }
