@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Middleware.Swagger
 {
@@ -23,6 +25,10 @@ namespace Server.Middleware.Swagger
 
             return services.AddSwaggerGen(c =>
             {
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Description = "Please enter JWT with Bearer into field", Name = "Authorization", Type = "apiKey" });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer", Enumerable.Empty<string>() },
+                });
                 c.SwaggerDoc("v1", new Info { Title = options.Project, Version = options.Version });
             });
         }
