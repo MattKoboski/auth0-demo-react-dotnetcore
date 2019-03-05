@@ -25,7 +25,7 @@ namespace Server.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            return Ok($"Removed {id}!");
+            return Ok();
         }
     }
 }
